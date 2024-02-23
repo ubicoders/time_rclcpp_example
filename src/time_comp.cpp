@@ -7,14 +7,15 @@ class TimeComparisonNode : public rclcpp::Node
 public:
     TimeComparisonNode() : Node("time_comparison_node")
     {
-        timer_ = this->create_wall_timer(1s, std::bind(&TimeComparisonNode::compare_time, this));
+        timer_ = this->create_wall_timer(0.1s, std::bind(&TimeComparisonNode::compare_time, this));
     }
 
 private:
     void compare_time()
     {
         // ROS Time (sim_time)
-        rclcpp::Time ros_time = this->now();
+        rclcpp::Time ros_time = this->get_clock()->now();
+        
 
         // System Time
         rclcpp::Clock system_clock(RCL_SYSTEM_TIME);
@@ -25,7 +26,7 @@ private:
         rclcpp::Time steady_time = steady_clock.now();
 
         RCLCPP_INFO(this->get_logger(), "ROS Time: %ld", ros_time.nanoseconds());
-        RCLCPP_INFO(this->get_logger(), "System Time: %ld", system_time.nanoseconds());
+        RCLCPP_INFO(this->get_logger(), "SYS Time: %ld", system_time.nanoseconds());
         RCLCPP_INFO(this->get_logger(), "Steady Time: %ld", steady_time.nanoseconds());
     }
 
